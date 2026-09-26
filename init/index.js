@@ -1,8 +1,11 @@
+// node init/index.js  |  always run this script from root folder
+
+require("dotenv").config();
 const mongoose = require("mongoose");
 const sampleListings = require("./data.js");
 const Listing = require("../models/listing.js");
-
 const MONGO_URL = process.env.MONGO_URI;
+console.log(MONGO_URL);
 
 main()
   .then(() => {
