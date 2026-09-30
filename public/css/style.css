@@ -1,5 +1,5 @@
 body {
-  background-color: pink;
+  /* background-color: rgb(251, 212, 219); */
   font-family: "Plus Jakarta Sans", sans-serif !important;
   display: flex;
   flex-direction: column;
@@ -89,9 +89,28 @@ body {
   background-color: white;
 }
 
-/* listings/new  add button */
-.add-btn,
+/* New page */
+.add-btn {
+  background-color: #fa424d !important;
+  border: none !important;
+}
+
+/* Edit page */
 .edit-btn {
   background-color: #fa424d !important;
   border: none !important;
+}
+
+/* Show page */
+.show-img {
+  height: 30vh;
+}
+
+.btns {
+  display: flex;
+}
+
+.show-card {
+  padding-left: 0;
+  padding-right: 0;
 }
