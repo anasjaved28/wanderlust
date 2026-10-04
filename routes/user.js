@@ -20,7 +20,7 @@ router.post(
       // req.user stores registeredUser
       console.log(registeredUser);
 
-      // after signup automatically login
+      // after signup automatically login,  passport logic
       req.login(registeredUser, (err) => {
         if (err) {
           return next(err);
@@ -43,7 +43,6 @@ router.get("/login", async (req, res) => {
 router.post(
   "/login",
   saveRedirectUrl,
-  //passed as middlware
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
