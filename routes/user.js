@@ -4,6 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const User = require("../models/user.js");
 const passport = require("passport");
 
+// SIGNUP route
 router.get("/signup", async (req, res) => {
   res.render("users/signup.ejs");
 });
@@ -25,6 +26,7 @@ router.post(
   }),
 );
 
+// LOGIN route
 router.get("/login", async (req, res) => {
   res.render("users/login.ejs");
 });
@@ -41,5 +43,17 @@ router.post(
     res.redirect("/listings");
   },
 );
+
+// LOGOUT route
+
+router.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.flash("success", "Logged Out!");
+    res.redirect("/listings");
+  });
+});
 
 module.exports = router;

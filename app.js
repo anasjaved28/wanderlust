@@ -56,16 +56,17 @@ app.use(cookieParser()); //doubt
 app.use(session(sessionOptions));
 app.use(flash());
 
-// PASSPORT must be initialized after sessions
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// PASSPORT logic
+app.use(passport.initialize()); // Initializes Passport as middleware in your Express application.
+app.use(passport.session()); // Enables persistent login sessions using Express sessions.
+passport.use(new LocalStrategy(User.authenticate())); // Tells Passport to use the Local Strategy (username + password authentication) and sets the verification logic.
+passport.serializeUser(User.serializeUser()); // User.serializeUser() stores only the unique user ID (e.g., _id). This keeps session cookies small and secure.
+passport.deserializeUser(User.deserializeUser()); // Fetches the full user object from MongoDB on every subsequent request based on the stored session ID.
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user; //req.user stores user's login info
   next();
 });
 
