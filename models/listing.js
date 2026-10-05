@@ -11,7 +11,7 @@ const listingSchema = new mongoose.Schema({
   image: {
     filename: {
       type: String,
-      default: "listingimage",  
+      default: "listingimage",
     },
     url: {
       type: String,
@@ -27,6 +27,10 @@ const listingSchema = new mongoose.Schema({
   location: String,
   country: String,
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {
