@@ -10,20 +10,26 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+
+// MODELS
 const User = require("./models/user.js");
 
-// routes
+// ROUTES
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
+// EJS setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.engine("ejs", ejsMate);
+
 app.use(express.static(path.join(__dirname, "public")));
+app.use(methodOverride("_method"));
+
+// Middleware to parse incoming request bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(methodOverride("_method"));
-app.engine("ejs", ejsMate);
 
 async function startServer() {
   try {
@@ -54,7 +60,7 @@ const sessionOptions = {
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // (7 days) maxAge specifies how many milliseconds the cookie should last in the browser before expiring. after 7 days user will automatically be logged out.
+    maxAge: 7 * 24 * 60 * 60 * 1000, // (7 days) maxAge specifies how many milliseconds the cookie should last in the browser before expiring. Here after 7 days user will automatically be logged out.
     httpOnly: true, // prevents client-side JavaScript from reading the session cookie through document.cookie.
   },
 };
