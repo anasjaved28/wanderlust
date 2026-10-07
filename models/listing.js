@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const Review = require("./review.js");
 
-const listingSchema = new mongoose.Schema({
+const listingSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -33,6 +33,7 @@ const listingSchema = new mongoose.Schema({
   },
 });
 
+// Delete all reviews associated with a listing when the listing is deleted
 listingSchema.post("findOneAndDelete", async (listing) => {
   if (listing) {
     await Review.deleteMany({ _id: { $in: listing.reviews } });

@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
-const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
+const {
+  isLoggedIn,
+  isListingOwner,
+  validateListing,
+} = require("../middleware.js");
 
 //Index Route
 router.get(
@@ -39,7 +43,7 @@ router.get(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id)
-      .populate({ path: "reviews", populate: { path: "author" } })
+      .populate({ path: "reviews", populate: { path: "author" } }) // Nested populate to get the author of each review
       .populate("owner");
     if (!listing) {
       req.flash("error", "Requested Listing Does Not Exit");
@@ -54,7 +58,7 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
-  isOwner,
+  isListingOwner,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -71,8 +75,8 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
-  isOwner,
-  validateListing, // Joi validates request data
+  isListingOwner,
+  validateListing,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndUpdate(
@@ -90,7 +94,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn,
-  isOwner,
+  isListingOwner,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);

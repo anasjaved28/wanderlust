@@ -14,6 +14,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 };
 
 // saving session info into locals because passport clears the session after login
+// passed inside POST method in routes/user.js
 module.exports.saveRedirectUrl = (req, res, next) => {
   if (req.session.redirectUrl) {
     res.locals.redirectUrl = req.session.redirectUrl;
@@ -23,7 +24,7 @@ module.exports.saveRedirectUrl = (req, res, next) => {
 };
 
 // AUTHORIZATION MIDDLEWARE
-module.exports.isOwner = async (req, res, next) => {
+module.exports.isListingOwner = async (req, res, next) => {
   const { id } = req.params;
   let listing = await Listing.findById(id);
   if (!listing.owner._id.equals(res.locals.currUser._id)) {

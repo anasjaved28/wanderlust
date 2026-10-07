@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome</title>
+    <style>
+      /* CSS Reset & Base */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Ambient Glow Backgrounds */
+      .glow-1 {
+        position: absolute;
+        top: 20%;
+        left: 30%;
+        width: 350px;
+        height: 350px;
+        background: rgba(99, 102, 241, 0.15);
+        border-radius: 50%;
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      .glow-2 {
+        position: absolute;
+        bottom: 20%;
+        right: 30%;
+        width: 300px;
+        height: 300px;
+        background: rgba(139, 92, 246, 0.15);
+        border-radius: 50%;
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      /* Card Layout */
+      .card {
+        position: relative;
+        z-index: 10;
+        max-width: 480px;
+        width: 100%;
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Floating Icon */
+      .icon-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        color: #818cf8;
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+        animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* Typography */
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin-bottom: 0.75rem;
+        color: #ffffff;
+      }
+
+      p {
+        color: #94a3b8;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      /* Buttons */
+      .btn-group {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background-color: #6366f1;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn-primary:hover {
+        background-color: #4f46e5;
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background-color: #334155;
+        color: #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .btn-secondary:hover {
+        background-color: #475569;
+        transform: translateY(-1px);
+      }
+
+      /* Footer Status */
+      .status {
+        margin-top: 2.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.75rem;
+        color: #64748b;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        color: #34d399;
+        margin-left: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+
+    <main class="card">
+      <div class="icon-badge">✦</div>
+      <h1>Welcome to Wanderlust</h1>
+      <p>
+        Discover and share amazing travel experiences. Explore listings, read
+        reviews, and connect with fellow travelers.
+      </p>
+
+      <div class="btn-group">
+        <a href="/listings" class="btn btn-primary">Explore Listings</a>
+        <a href="/login" class="btn btn-secondary">Sign In</a>
+      </div>
+
+      <div class="status">Status: <span class="status-dot">● 200 OK</span></div>
+    </main>
+  </body>
+</html>

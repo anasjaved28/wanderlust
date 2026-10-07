@@ -78,12 +78,12 @@ passport.deserializeUser(User.deserializeUser()); // Fetches the full user objec
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currUser = req.user; //req.user stores user's login info
+  res.locals.currUser = req.user; // Passport automatically adds the authenticated user to req.user
   next();
 });
 
 app.get("/", (req, res) => {
-  res.send("Hi, I am root");
+  res.render("root.ejs");
 });
 
 // ROUTES
@@ -91,7 +91,7 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-// UNKOWN PATH INTERCEPTOR
+// UNKNOWN PATH INTERCEPTOR
 app.all("/{*splat}", (req, res, next) => {
   next(new ExpressError(404, "Page not found"));
 });

@@ -1,5 +1,4 @@
 // node init/index.js  |  always run this script from root folder
-
 require("dotenv").config();
 const mongoose = require("mongoose");
 let sampleListings = require("./data.js");
