@@ -23,14 +23,15 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
       rel="stylesheet"
     />
+    <!-- review's rating style -->
+    <link rel="stylesheet" href="/css/rating.css" />
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <%-include("../includes/navbar.ejs")%>
 
     <div class="container">
-      <%-include("../includes/flash.ejs")%> 
-      <%- body %>
+      <%-include("../includes/flash.ejs")%> <%- body %>
       <!-- Individual page contents get injected right here! -->
     </div>
 
