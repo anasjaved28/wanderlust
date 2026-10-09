@@ -48,11 +48,19 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
   const { id } = req.params;
-  await Listing.findByIdAndUpdate(
+
+  let listing = await Listing.findByIdAndUpdate(
     id,
     { ...req.body.listing },
     { runValidators: true }, // Mongoose validates the update
   );
+
+  if (typeof req.file !== "undefined") {
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = { filename, url };
+    await listing.save();
+  }
 
   req.flash("success", "Listing Updated Successfully");
   res.redirect(`/listings/${id}`);
