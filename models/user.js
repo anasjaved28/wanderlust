@@ -8,7 +8,13 @@ const passportLocalMongoose =
   require("passport-local-mongoose");
 
 const userSchema = new Schema({
-  email: { type: String, required: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
 });
 
 // plugins add fields (like username, hash, and salt) and helper methods directly onto the Schema

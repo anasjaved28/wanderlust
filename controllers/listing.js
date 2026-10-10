@@ -12,25 +12,49 @@ module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
 
-module.exports.createListing = async (req, res, next) => {
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: req.body.listing.location,
-      limit: 1, // Limit the coordinates
-    })
+// Create New Listing
+const pickListingFields = ({
+  title,
+  description,
+  price,
+  location,
+  country,
+}) => ({
+  title,
+  description,
+  price,
+  location,
+  country,
+});
+
+const geocode = async (location) => {
+  const response = await geocodingClient
+    .forwardGeocode({ query: location, limit: 1 })
     .send();
+  return response.body.features[0]?.geometry;
+};
 
-  let url = req.file.path; // Get the path of the uploaded file
-  let filename = req.file.filename; // Get the filename of the uploaded file
+module.exports.createListing = async (req, res) => {
+  const geometry = await geocode(req.body.listing.location);
+  if (!geometry) {
+    req.flash(
+      "error",
+      "Could not find that location. Try being more specific.",
+    );
+    return res.redirect("/listings/new");
+  }
 
-  const newListing = new Listing(req.body.listing);
+  const newListing = new Listing(pickListingFields(req.body.listing));
   newListing.owner = req.user._id;
-  newListing.image = { filename, url };
-  newListing.geometry = response.body.features[0].geometry;
+  newListing.geometry = geometry;
+  if (req.file) {
+    newListing.image = { filename: req.file.filename, url: req.file.path };
+  }
+
   await newListing.save();
 
   req.flash("success", "Listing Created Successfully");
-  return res.redirect("/listings");
+  res.redirect("/listings");
 };
 
 module.exports.showListing = async (req, res) => {
@@ -64,7 +88,26 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateListing = async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
-  Object.assign(listing, req.body.listing);
+  if (!listing) {
+    req.flash("error", "Requested Listing Does Not Exist");
+    return res.redirect("/listings");
+  }
+
+  const locationChanged = req.body.listing.location !== listing.location;
+  Object.assign(listing, pickListingFields(req.body.listing));
+
+  if (locationChanged) {
+    const geometry = await geocode(listing.location);
+    if (!geometry) {
+      req.flash(
+        "error",
+        "Could not find that location. Try being more specific.",
+      );
+      return res.redirect(`/listings/${id}/edit`);
+    }
+    listing.geometry = geometry;
+  }
+
   if (req.file) {
     listing.image = { filename: req.file.filename, url: req.file.path };
   }

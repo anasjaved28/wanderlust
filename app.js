@@ -85,9 +85,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.render("root.ejs");
-});
+// app.get("/", (req, res) => {
+//   res.render("root.ejs");
+// });
 
 // ROUTES
 app.use("/listings", listingRouter);

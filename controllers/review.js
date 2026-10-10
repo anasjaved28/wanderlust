@@ -21,11 +21,18 @@ module.exports.createReview = async (req, res) => {
 };
 
 module.exports.deleteReview = async (req, res) => {
-  let { id, reviewId } = req.params;
+  const { id, reviewId } = req.params;
 
-  await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+  const listing = await Listing.findOneAndUpdate(
+    { _id: id, reviews: reviewId },
+    { $pull: { reviews: reviewId } },
+  );
+  if (!listing) {
+    req.flash("error", "Review not found on this listing.");
+    return res.redirect(`/listings/${id}`);
+  }
+
   await Review.findByIdAndDelete(reviewId);
-
   req.flash("success", "Review Deleted");
   res.redirect(`/listings/${id}`);
 };

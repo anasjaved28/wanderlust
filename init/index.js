@@ -1,33 +1,30 @@
 // node init/index.js  |  always run this script from root folder
 require("dotenv").config();
 const mongoose = require("mongoose");
-let sampleListings = require("./data.js");
+const sampleListings = require("./data.js");
 const Listing = require("../models/listing.js");
-const MONGO_URL = process.env.MONGO_URI;
-console.log(MONGO_URL);
 
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-async function main() {
-  await mongoose.connect(MONGO_URL);
-}
+const MALDIVES = [73.5093, 4.1755]; // [lng, lat], Malé
+const OWNER_ID = "6aca8c258c8ef2f21d8b0a9a"; // must be the _id of a real user
 
 const initDB = async () => {
+  await mongoose.connect(process.env.MONGO_URI);
+  console.log("connected to DB");
+
   await Listing.deleteMany({});
 
-  sampleListings = sampleListings.map((obj) => ({
+  const listings = sampleListings.map((obj) => ({
     ...obj,
-    owner: "6ac34755386a32dc2e0681c1",
+    owner: OWNER_ID,
+    geometry: { type: "Point", coordinates: [...MALDIVES] },
   }));
 
-  await Listing.insertMany(sampleListings);
+  await Listing.insertMany(listings);
   console.log("data was initialized");
+  await mongoose.disconnect();
 };
 
-initDB();
+initDB().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

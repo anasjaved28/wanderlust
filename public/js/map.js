@@ -1,17 +1,18 @@
 const map = new mapboxgl.Map({
-  // public files cannot access environment variables, so we pass the token from the server to the client via a script tag in the EJS template
   accessToken: mapToken,
-  container: "map", // container ID
-  center: listing.geometry.coordinates, // [lng,lt]
+  container: "map",
+  center: mapData.coordinates, // [lng, lat]
   zoom: 10,
 });
 
-// Create a default Marker and add it to the map.
-const marker = new mapboxgl.Marker({ color: "red" })
-  .setLngLat(listing.geometry.coordinates)
-  .setPopup(
-    new mapboxgl.Popup({ offset: 25 }).setHTML(
-      `<h4>${listing.location}</h4><p>Exact Location provided after booking</p>`,
-    ),
-  )
+const popupContent = document.createElement("div");
+const heading = document.createElement("h4");
+heading.textContent = mapData.location;
+const note = document.createElement("p");
+note.textContent = "Exact Location provided after booking";
+popupContent.append(heading, note);
+
+new mapboxgl.Marker({ color: "red" })
+  .setLngLat(mapData.coordinates)
+  .setPopup(new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent))
   .addTo(map);

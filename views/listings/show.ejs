@@ -1,10 +1,19 @@
 <% layout("/layouts/boilerplate") %>
 
+<%
+  const MALDIVES = [73.5093, 4.1755]; // [lng, lat]
+  const geo = listing.geometry && listing.geometry.coordinates;
+  const coords = Array.isArray(geo) && geo.length === 2 ? geo : MALDIVES;
+%>
+
 <script>
   const mapToken = "<%= process.env.MAPBOX_PUBLIC_TOKEN %>";
-  // EJS converts an array to a string therefore we use stringify to convert it back to an array
-  const listing = <%-JSON.stringify(listing)%>;
+  const mapData = {
+    location: <%- JSON.stringify(listing.location || "").replace(/</g, "\\u003c") %>,
+    coordinates: <%- JSON.stringify(coords) %>
+  };
 </script>
+
 
 <div class="row mt-3">
   <div class="col-8 offset-3">
@@ -17,7 +26,7 @@
       alt="listing_img"
     />
     <div class="card-body">
-      <p class="card-text">owned by: <i><%=listing.owner.username%></i> </p>
+      <p class="card-text">owned by: <i><%= listing.owner ? listing.owner.username : "unknown" %></i></p>
        <p class="card-text"><%= listing.description %> </p>
         <p class="card-text">&#8377; <%= listing.price.toLocaleString("en-IN") %> </p>
          <p class="card-text"><%= listing.location %></p>
@@ -28,7 +37,7 @@
 <!-- &#8377; is code for rupees symbol -->
 <!-- number.toLocaleString("en-IN") converts it into string and add commas based on number system of respective country -->
 
-<% if(currUser && currUser._id.equals(listing.owner._id)) {%>
+<% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
 <div class="btns">
   <a
     href="/listings/<%= listing._id %>/edit"
@@ -95,19 +104,21 @@
     <%if (listing.reviews.length > 0) {%>
       <div class="row">
         <p><b>All Reviews</b></p>
-          <% for (review of listing.reviews) {%>
-             <div class="card col-5 ms-3 mb-3">
-                 <div class="card-body">
-                    <h5 class="card-title">@<%=review.author.username%></h5>
-                    <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
-                    <p class="card-text"><%=review.comment%></p>
-                 </div>
+          <% for (const review of listing.reviews) { %>
+            <div class="card col-5 ms-3 mb-3">
+              <div class="card-body">
+                <h5 class="card-title">@<%= review.author ? review.author.username : "deleted user" %></h5>
+                <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+                <p class="card-text"><%= review.comment %></p>
+              </div>
 
-                 <form class="mb-3" method="POST" action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE">
+              <% if (currUser && review.author && currUser._id.equals(review.author._id)) { %>
+                <form class="mb-3" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
                   <button class="btn btn-sm btn-dark">Delete</button>
-                 </form>
-             </div>
-           <%}%>
+                </form>
+              <% } %>
+            </div>
+          <% } %>
       </div>
     <%}%>
 </div>
