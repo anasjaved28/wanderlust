@@ -31,7 +31,6 @@ module.exports.showListing = async (req, res) => {
     req.flash("error", "Requested Listing Does Not Exit");
     return res.redirect("/listings");
   }
-  // console.log(listing);
   res.render("listings/show.ejs", { listing });
 };
 
@@ -42,26 +41,23 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Requested Listing Does Not Exist");
     return res.redirect("/listings");
   }
-
-  res.render("listings/edit.ejs", { listing });
+  // Resize the Preview image using Cloudinary transformations
+  let originalImageUrl = listing.image.url;
+  originalImageUrl = originalImageUrl.replace(
+    "/upload",
+    "/upload/w_250,h_150,c_fill,q_auto",
+  );
+  res.render("listings/edit.ejs", { listing, originalImageUrl });
 };
 
 module.exports.updateListing = async (req, res) => {
   const { id } = req.params;
-
-  let listing = await Listing.findByIdAndUpdate(
-    id,
-    { ...req.body.listing },
-    { runValidators: true }, // Mongoose validates the update
-  );
-
-  if (typeof req.file !== "undefined") {
-    let url = req.file.path;
-    let filename = req.file.filename;
-    listing.image = { filename, url };
-    await listing.save();
+  const listing = await Listing.findById(id);
+  Object.assign(listing, req.body.listing);
+  if (req.file) {
+    listing.image = { filename: req.file.filename, url: req.file.path };
   }
-
+  await listing.save();
   req.flash("success", "Listing Updated Successfully");
   res.redirect(`/listings/${id}`);
 };
