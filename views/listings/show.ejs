@@ -1,7 +1,9 @@
 <% layout("/layouts/boilerplate") %>
 
 <script>
-const mapToken = "<%= process.env.MAPBOX_PUBLIC_TOKEN %>";
+  const mapToken = "<%= process.env.MAPBOX_PUBLIC_TOKEN %>";
+  // EJS converts an array to a string therefore we use stringify to convert it back to an array
+  const listing = <%-JSON.stringify(listing)%>;
 </script>
 
 <div class="row mt-3">
